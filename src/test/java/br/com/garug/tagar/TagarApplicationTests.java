@@ -9,5 +9,4 @@ class TagarApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

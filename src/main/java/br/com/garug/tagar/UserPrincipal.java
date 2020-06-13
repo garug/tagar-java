@@ -1,11 +1,15 @@
 package br.com.garug.tagar;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class UserPrincipal implements Principal {
 
     private UUID id;
+
+    private final List<String> chats = new ArrayList<>();
 
     public UserPrincipal(UUID id) {
         this.id = id;
@@ -21,6 +25,14 @@ public class UserPrincipal implements Principal {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public void addChat(String chat) {
+        this.chats.add(chat);
+    }
+
+    public void removeChat(String chat) {
+        this.chats.remove(chat);
     }
 
     @Override
