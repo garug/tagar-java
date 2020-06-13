@@ -20,7 +20,10 @@ public class MessageController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/secured/room")
-    public void sendRoom(@Payload Message msg, @Header("id") String id, SimpMessageHeaderAccessor headerAccessor) throws Exception {
+    public void sendRoom(
+            @Payload Message msg,
+            Principal principal
+    ) throws Exception {
         LocalDateTime timestamp = LocalDateTime.now();
         var incomingMsg = new Message(msg.getFrom(), msg.getMessage(), timestamp);
         simpMessagingTemplate.convertAndSendToUser("teste", "secured/user/specific", msg);
