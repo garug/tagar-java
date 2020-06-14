@@ -18,7 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic", "/queue", "/user");
+        registry.enableSimpleBroker("/user", "/chat");
         registry.setApplicationDestinationPrefixes("/app");
     }
 
@@ -26,7 +26,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocket")
                 .setHandshakeHandler(new UserInterceptor())
-                .addInterceptors()
                 .setAllowedOrigins("*");
     }
 

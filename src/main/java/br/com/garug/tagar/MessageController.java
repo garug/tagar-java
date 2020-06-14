@@ -1,10 +1,7 @@
 package br.com.garug.tagar;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.handler.annotation.*;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
@@ -41,12 +38,9 @@ public class MessageController {
                         () -> actualLookingForChat.put(principal.getName(), principal));
     }
 
-    @MessageMapping("chat/{chatId}")
-    @SendTo("chat/{chatId}")
-    public Message messageChat(@Payload String message, Principal principal) {
-        var msg = new Message();
-        msg.setMessage(message);
-        msg.setFrom(principal.getName());
-        return msg;
+    @MessageMapping("/chat/{chatId}")
+    @SendTo("/chat/{chatId}")
+    public Message messageChat(@Payload String message, Principal principal, @DestinationVariable String chatId) {
+        return new Message(principal.getName(), message);
     }
 }
