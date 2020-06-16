@@ -35,9 +35,7 @@ public class MessageController {
                 .findAny()
                 .ifPresentOrElse(
                         stranger -> {
-                            var room = new Room(UUID.randomUUID().toString());
-                            room.addUser(stranger.getValue());
-                            room.addUser(principal);
+                            var room = new Room(principal, stranger.getValue());
                             roomManager.add(room);
                             room.getUsers().forEach( user -> simpMessagingTemplate.convertAndSendToUser(user.getName(), "", room.getId()));
                             actualLookingForChat.remove(stranger.getKey());

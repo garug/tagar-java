@@ -1,9 +1,8 @@
 package br.com.garug.tagar;
 
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
 
 public class Room {
 
@@ -13,6 +12,15 @@ public class Room {
     public Room(String id) {
         this.id = id;
         this.users = new HashSet<>();
+    }
+
+    public Room(String id, Principal... users) {
+        this(id);
+        this.users.addAll(Arrays.asList(users));
+    }
+
+    public Room(Principal... users) {
+        this(UUID.randomUUID().toString(), users);
     }
 
     public void addUser(Principal user) {
