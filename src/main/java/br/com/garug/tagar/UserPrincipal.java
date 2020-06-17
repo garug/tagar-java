@@ -1,15 +1,15 @@
 package br.com.garug.tagar;
 
+import org.springframework.messaging.simp.user.SimpSubscription;
+
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class UserPrincipal implements Principal {
 
     private UUID id;
 
-    private final List<String> chats = new ArrayList<>();
+    private final Set<SimpSubscription> subscriptions = new HashSet<>();
 
     public UserPrincipal(UUID id) {
         this.id = id;
@@ -27,12 +27,12 @@ public class UserPrincipal implements Principal {
         this.id = id;
     }
 
-    public void addChat(String chat) {
-        this.chats.add(chat);
+    public void addSubscription(SimpSubscription subscription) {
+        this.subscriptions.add(subscription);
     }
 
-    public void removeChat(String chat) {
-        this.chats.remove(chat);
+    public void removeSubscription(SimpSubscription subscription) {
+        this.subscriptions.remove(subscription);
     }
 
     @Override
