@@ -1,8 +1,6 @@
 package br.com.garug.tagar;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -11,15 +9,19 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
 @Configuration
 @EnableWebSocketMessageBroker
-@ComponentScan(value = "br.com.garug.tagar")
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    private final RoomManager roomManager;
+
     @Autowired
-    private RoomEventService roomEventManager;
+    public WebSocketConfig(RoomManager roomManager) {
+        this.roomManager = roomManager;
+    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -41,13 +43,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     @EventListener
-    public void onUnsubscribe(SessionUnsubscribeEvent event) {
+    public void onSubscribe(SessionSubscribeEvent event) {
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
-        roomEventManager.unsubscribe(sha.getSubscriptionId(), sha.getUser());
+        roomManager.subscribe(sha.getDestination(), sha.getUser());
     }
 
-    @Bean
-    public RoomManager roomManager(){
-        return new RoomManager();
+    @EventListener
+    public void onUnsubscribe(SessionUnsubscribeEvent event) {
+        StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
+        roomManager.unsubscribe(sha.getSubscriptionId(), sha.getUser());
     }
 }
