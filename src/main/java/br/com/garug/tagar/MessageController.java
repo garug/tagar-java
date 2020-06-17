@@ -38,8 +38,9 @@ public class MessageController {
                 .findAny()
                 .ifPresentOrElse(
                         stranger -> {
+                            var chatId = UUID.randomUUID().toString();
                             var users = List.of(principal, stranger.getValue());
-                            users.forEach( user -> simpMessagingTemplate.convertAndSendToUser(user.getName(), "", UUID.randomUUID()));
+                            users.forEach( user -> simpMessagingTemplate.convertAndSendToUser(user.getName(), "", chatId));
                             actualLookingForChat.remove(stranger.getKey());
                         },
                         () -> actualLookingForChat.put(principal.getName(), principal));
